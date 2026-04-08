@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1775533699714,
+      "tag": "0000_organic_ken_ellis",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1775533819110,
+      "tag": "0001_far_madame_web",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1775652612578,
+      "tag": "0002_friendly_medusa",
+      "breakpoints": true
+    }
+  ]
+}
