@@ -147,6 +147,59 @@ export const appRouter = router({
         const { getNotificationHistory } = await import('./securityDb');
         return await getNotificationHistory(ctx.user.id, limit);
       }),
+
+    /**
+     * Local-RAG library vulnerability intelligence report.
+     */
+    libraryRisk: protectedProcedure
+      .input((val: unknown) => {
+        if (typeof val === 'object' && val !== null) {
+          const input = val as Record<string, unknown>;
+          return {
+            packageName: String(input.packageName || ''),
+            packageVersion: input.packageVersion ? String(input.packageVersion) : undefined,
+          };
+        }
+        throw new Error('Invalid input');
+      })
+      .mutation(async ({ input }) => {
+        if (!input.packageName) {
+          throw new Error('packageName is required');
+        }
+
+        const { buildLibraryRiskReport } = await import('./securityIntelligence');
+        return await buildLibraryRiskReport(input.packageName, input.packageVersion);
+      }),
+
+    /**
+     * Analyze a local git commit and infer security remediation details.
+     */
+    analyzePatch: protectedProcedure
+      .input((val: unknown) => {
+        if (typeof val === 'string') return val.trim();
+        throw new Error('commit hash must be a string');
+      })
+      .mutation(async ({ input: commitHash }) => {
+        if (!commitHash) {
+          throw new Error('commit hash is required');
+        }
+
+        const { analyzePatchCommit } = await import('./securityIntelligence');
+        return await analyzePatchCommit(commitHash);
+      }),
+
+    /**
+     * Lookup a CVE across ingested sources and return normalized intelligence.
+     */
+    cveLookup: protectedProcedure
+      .input((val: unknown) => {
+        if (typeof val === 'string') return val.trim();
+        throw new Error('CVE ID must be a string');
+      })
+      .mutation(async ({ input: cveId }) => {
+        const { buildCveIntelReport } = await import('./securityIntelligence');
+        return await buildCveIntelReport(cveId);
+      }),
   }),
 
   dashboard: router({
