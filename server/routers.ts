@@ -187,19 +187,6 @@ export const appRouter = router({
         const { analyzePatchCommit } = await import('./securityIntelligence');
         return await analyzePatchCommit(commitHash);
       }),
-
-    /**
-     * Lookup a CVE across ingested sources and return normalized intelligence.
-     */
-    cveLookup: protectedProcedure
-      .input((val: unknown) => {
-        if (typeof val === 'string') return val.trim();
-        throw new Error('CVE ID must be a string');
-      })
-      .mutation(async ({ input: cveId }) => {
-        const { buildCveIntelReport } = await import('./securityIntelligence');
-        return await buildCveIntelReport(cveId);
-      }),
   }),
 
   dashboard: router({
